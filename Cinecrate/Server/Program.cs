@@ -1,9 +1,24 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Server.DbContexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+// Add services to the container.
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.ReturnHttpNotAcceptable = true;
+}).AddXmlDataContractSerializerFormatters();
 builder.Services.AddRazorPages();
+
+// Swagger documentation at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cinecrate", Version = "v1" }); });
+
+// Determine file type to return the correct content media type
+builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+builder.Services.AddDbContext<MovieInfoContext>(DbContextOptions => DbContextOptions.UseSqlServer(builder.Configuration.GetConnectionString("LocalSQLServer")));
 
 var app = builder.Build();
 
@@ -11,6 +26,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SE 694 Advanced Data Base System v1"));
 }
 else
 {
