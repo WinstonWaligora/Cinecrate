@@ -11,45 +11,54 @@
 	</div>
 
 	<EditForm Model="@newMovie" OnValidSubmit="@handleValidSubmit">
-		<div class="form-group">
-			<label for="title">Title</label>
-			<input type="text" class="form-control" id="title" placeholder="Enter title" @bind="@newMovie.Title" />
-			<ValidationMessage For="@(() => newMovie.Title)" />
-		</div>
+		<div class="row">
+			<div class="column">
+			</div>
 
-		<div class="form-group">
-			<label for="releaseDate">Release Date</label>
-			<input type="date" class="form-control" id="releaseDate" placeholder="Enter release date" @bind="@newMovie.ReleaseDate" />
-			<ValidationMessage For="@(() => newMovie.ReleaseDate)" />
-		</div>
+			<div class="column">
 
-		<div class="form-group">
-			<label for="duration">Duration</label>
-			<input type="number" class="form-control" id="duration" placeholder="Enter duration in minutes" @bind="@newMovie.Duration" />
-			<ValidationMessage For="@(() => newMovie.Duration)" />
-		</div>
+				<div class="form-group">
+					<label for="title">Title</label>
+					<input type="text" class="form-control" id="title" placeholder="Enter title" @bind="@newMovie.Title" />
+					<ValidationMessage For="@(() => newMovie.Title)" />
+				</div>
 
-		<div class="form-group">
-			<label for="director">Director</label>
-			<input type="text" class="form-control" id="director" placeholder="Enter director name" @bind="@newMovie.Director" />
-			<ValidationMessage For="@(() => newMovie.Director)" />
-		</div>
+				<div class="form-group">
+					<label for="releaseDate">Release Date</label>
+					<input type="date" class="form-control" id="releaseDate" placeholder="Enter release date" @bind="@newMovie.ReleaseDate" />
+					<ValidationMessage For="@(() => newMovie.ReleaseDate)" />
+				</div>
 
-		<div class="form-group">
-			<label for="tag">Tag</label>
-			<input type="text" class="form-control" id="tag" placeholder="Enter tag name" @bind="@TagInputValue" />
-			<button type="button" class="btn btn-primary ml-2 mb-2" @onclick="@AddTag">Add Tag</button>
-		</div>
+				<div class="form-group">
+					<label for="duration">Duration</label>
+					<input type="number" class="form-control" id="duration" placeholder="Enter duration in minutes" @bind="@newMovie.Duration" />
+					<ValidationMessage For="@(() => newMovie.Duration)" />
+				</div>
 
-		@if (Tags.Count > 0)
-		{
-			<ul>
-				@foreach (var tag in Tags)
+				<div class="form-group">
+					<label for="director">Director</label>
+					<input type="text" class="form-control" id="director" placeholder="Enter director name" @bind="@newMovie.Director" />
+					<ValidationMessage For="@(() => newMovie.Director)" />
+				</div>
+
+				<div class="form-group">
+					<label for="tag">Tag</label>
+					<input type="text" class="form-control" id="tag" placeholder="Enter tag name" @bind="@TagInputValue" />
+					<button type="button" class="btn btn-primary ml-2 mb-2" @onclick="@AddTag">Add Tag</button>
+				</div>
+
+				@if (Tags.Count > 0)
 				{
-					<li>@tag</li>
+					<ul>
+						@foreach (var tag in Tags)
+						{
+							<li>@tag</li>
+						}
+					</ul>
 				}
-			</ul>
-		}
+
+			</div>
+		</div>
 
 		<div class="form-group">
 			<label for="description">Description</label>
