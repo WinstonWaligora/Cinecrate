@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Cinecrate.Shared.Models
+namespace Cinecrate.Shared.Entities
 {
     [Table("Movie Tag")]
     public class MovieTag
