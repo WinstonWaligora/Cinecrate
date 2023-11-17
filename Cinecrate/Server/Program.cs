@@ -21,7 +21,8 @@ builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
 // Define Database Context
-builder.Services.AddDbContext<MovieInfoContext>(DbContextOptions => DbContextOptions.UseSqlServer(builder.Configuration.GetConnectionString("LocalSQLServer")));
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING_SE641");
+builder.Services.AddDbContext<MovieInfoContext>(DbContextOptions => DbContextOptions.UseSqlServer(connectionString));
 
 // Add Movie Service
 builder.Services.AddScoped<IMovieService, MovieService>();
