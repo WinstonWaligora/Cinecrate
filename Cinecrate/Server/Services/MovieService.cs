@@ -24,7 +24,7 @@ namespace Cinecrate.Server.Services
 			throw new NotImplementedException();
 		}
 
-		public void DeleteAll()
+		public void DeleteMovies()
 		{
 			throw new NotImplementedException();
 		}
@@ -34,12 +34,18 @@ namespace Cinecrate.Server.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task<IEnumerable<MovieDto?>> GetAll()
+		public async Task<IEnumerable<MovieDto?>> GetMovies()
 		{
-			return await _context.Movies
-				.OrderBy(movie => movie.Title)
-				.ProjectTo<MovieDto>(configuration: _mapper.ConfigurationProvider)
-				.ToListAsync();
+			var movies = await _context.Movies.ToListAsync();
+			var moviesDto = _mapper.Map<IEnumerable<MovieDto>>(movies);
+			return moviesDto;
+		}
+
+		public async Task<IEnumerable<MovieWithTagsDto?>> GetMoviesWithTags()
+		{
+			var movies = await _context.Movies.Include(movie => movie.MovieTags).ThenInclude(movieTag => movieTag.Tag).ToListAsync();
+			var moviesDto = _mapper.Map<IEnumerable<MovieWithTagsDto>>(movies);
+			return moviesDto;
 		}
 
 		public async Task<MovieDto?> GetMovie(Guid movieId)
@@ -51,24 +57,6 @@ namespace Cinecrate.Server.Services
 
 		public async Task<MovieWithTagsDto?> GetMovieWithTags(Guid movieId)
 		{
-			//return await _context.Movies
-			//	.Where(movie => movie.MovieId == movieId)
-			//	.Select(movie => new MovieWithTagsDto
-			//	{
-			//		Description = movie.Description,
-			//		Director = movie.Director,
-			//		Duration = movie.Duration,
-			//		MovieId = movie.MovieId,
-			//		Poster = movie.Poster,
-			//		Rating = movie.Rating,
-			//		ReleaseDate = movie.ReleaseDate,
-			//		Title = movie.Title,
-			//		Tags = movie.MovieTags
-			//			.Select(movieTag => new TagDto { Name = movieTag.Tag.Name, TagId = movieTag.Tag.TagId })
-			//			.ToList()
-			//	})
-			//	.FirstOrDefaultAsync();
-
 			var movie = await _context.Movies.Where(movie => movie.MovieId == movieId).Include(movie => movie.MovieTags).ThenInclude(movieTag => movieTag.Tag).FirstOrDefaultAsync();
 			var movieWithTagsDto = _mapper.Map<MovieWithTagsDto>(movie);
 			return movieWithTagsDto;

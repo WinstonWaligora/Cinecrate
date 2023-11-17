@@ -21,9 +21,9 @@ namespace Server.Controllers
 
 		[HttpGet]
 		[Produces("application/json")]
-		public async Task<ActionResult<IEnumerable<MovieDto>>> GetAll()
+		public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
 		{
-			var movies = await _movieService.GetAll();
+			var movies = await _movieService.GetMoviesWithTags();
 			if (movies == null)
 			{
 				return NotFound();
