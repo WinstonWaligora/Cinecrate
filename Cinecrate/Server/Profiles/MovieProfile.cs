@@ -17,8 +17,10 @@ namespace Cinecrate.Server.Profiles
 							Name = movieTag.Tag.Name,
 							TagId = movieTag.Tag.TagId
 						}).ToList()));
+			CreateMap<MovieWithTagsDto, Movie>();
 			CreateMap<MovieTag, MovieTagDto>();
 			CreateMap<Tag, TagDto>();
+			CreateMap<TagDto, Tag>();
 		}
 	}
 }
