@@ -44,9 +44,9 @@ namespace Server.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<MovieWithTagsDto>> CreateMovie(MovieWithTagsDto movieWithTagsDto)
+		public ActionResult<Movie> CreateMovie(string title)
 		{
-			return Ok(await _movieService.CreateMovie(movieWithTagsDto));
+			throw new NotImplementedException();
 		}
 
 		[HttpPut("{id}")]

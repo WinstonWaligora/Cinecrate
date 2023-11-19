@@ -5,7 +5,7 @@ namespace Cinecrate.Server.Services
 {
     public interface IMovieService
 	{
-		Task<MovieWithTagsDto> CreateMovie(MovieWithTagsDto movieWithTagsDto);
+		Task<Guid> CreateMovie(Movie movie);
 		void DeleteMovies();
 		void DeleteMovie(Guid movieId);
 		Task<IEnumerable<MovieDto?>> GetMovies();

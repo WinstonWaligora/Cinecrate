@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Server.DbContexts;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Cinecrate.Shared.Entities;
 using Cinecrate.Shared.Models;
 
@@ -8,34 +9,19 @@ namespace Cinecrate.Server.Services
 {
 	public class MovieService : IMovieService
 	{
+		private readonly string _dbConnectionString = string.Empty;
 		private readonly MovieInfoContext _context;
 		private readonly IMapper _mapper;
 		public MovieService(IConfiguration configuration, MovieInfoContext context, IMapper mapper)
 		{
+			_dbConnectionString = configuration["LocalSQLServer"];
 			_context = context;
 			_mapper = mapper;
 		}
 
-		public async Task<MovieWithTagsDto> CreateMovie(MovieWithTagsDto movieWithTagsDto)
+		public Task<Guid> CreateMovie(Movie movie)
 		{
-			var movie = _mapper.Map<Movie>(movieWithTagsDto);
-			_context.Movies.Add(movie);
-
-			var tags = movieWithTagsDto.Tags ?? new List<TagDto>();
-			foreach (var tagDto in tags)
-			{
-				var tag = _mapper.Map<Tag>(tagDto);
-				_context.Tags.Add(tag);
-				_context.MovieTags.Add(new MovieTag
-				{
-					Movie = movie,
-					Tag = tag
-				});
-			}
-
-			await _context.SaveChangesAsync();
-
-			return _mapper.Map<MovieWithTagsDto>(movie);
+			throw new NotImplementedException();
 		}
 
 		public void DeleteMovies()

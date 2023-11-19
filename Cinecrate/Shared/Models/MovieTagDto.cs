@@ -2,7 +2,7 @@
 {
     public class MovieTagDto
     {
-        public Guid? MovieId { get; set; }
-        public Guid? TagId { get; set; }
+        public Guid MovieId { get; set; }
+        public Guid TagId { get; set; }
     }
 }
