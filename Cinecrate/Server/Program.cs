@@ -1,3 +1,4 @@
+using Cinecrate.Server.Services;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -18,7 +19,22 @@ builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title
 
 // Determine file type to return the correct content media type
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
-builder.Services.AddDbContext<MovieInfoContext>(DbContextOptions => DbContextOptions.UseSqlServer(builder.Configuration.GetConnectionString("LocalSQLServer")));
+
+// Define Database Context
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING_SE641");
+builder.Services.AddDbContext<MovieInfoContext>(DbContextOptions => DbContextOptions.UseSqlServer(connectionString));
+
+// Add Movie Service
+builder.Services.AddScoped<IMovieService, MovieService>();
+
+// Add AutoMapper which is being used to map the database context models to data transfer objects.
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+#if DEBUG
+// Load debug services here
+#else
+// Load production services here
+#endif
 
 var app = builder.Build();
 

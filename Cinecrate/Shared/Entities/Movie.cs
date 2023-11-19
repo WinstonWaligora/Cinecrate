@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Cinecrate.Shared.Models
+namespace Cinecrate.Shared.Entities
 {
     public class Movie
     {
@@ -22,6 +22,9 @@ namespace Cinecrate.Shared.Models
         [Column("Movie ID", TypeName = "uniqueidentifier")]
         public Guid MovieId { get; set; }
 
+        // The related MovieTags that have the same MovieId
+        public IEnumerable<MovieTag> MovieTags { get; set; } = new List<MovieTag>();
+
         // Image file that shows the poster of the movie
         [Column(TypeName = "varbinary(MAX)")]
         public byte[]? Poster { get; set; }
@@ -39,9 +42,6 @@ namespace Cinecrate.Shared.Models
         [Required]
         [MaxLength(50)]
         public required string Title { get; set; }
-
-        // delete this field
-        public string emptyfield { get; set; }
 
         public Movie() { }
 

@@ -1,82 +1,87 @@
 ﻿@page "/create-movie"
-@using System.ComponentModel.DataAnnotations
-@using Cinecrate.Shared.Models;
+@using Cinecrate.Client.Shared
+@using Cinecrate.Shared.Models
 @using Microsoft.AspNetCore.Components.Forms
 
-<h3 class="header">Create New Movie</h3>
+<Header />
 
 <div class="main-content">
-	<div>
-		<i class="fa fa-plus"></i>
-	</div>
-
 	<EditForm Model="@newMovie" OnValidSubmit="@handleValidSubmit">
 		<div class="row">
 			<div class="column">
+				<div class="add-poster column-item" style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw;">
+					<i class="fas fa-plus fa-2xl"></i>
+				</div>
+				<div class="column-item">
+					<label for="description">Description</label>
+					<textarea id="description" rows="3" style="max-width: 41vw;" @bind="@newMovie.Description"></textarea>
+				</div>
 			</div>
-
 			<div class="column">
-
-				<div class="form-group">
+				<div class="column-item">
 					<label for="title">Title</label>
-					<input type="text" class="form-control" id="title" placeholder="Enter title" @bind="@newMovie.Title" />
+					<input type="text" id="title" placeholder="Enter movie title" @bind="@newMovie.Title" />
 					<ValidationMessage For="@(() => newMovie.Title)" />
 				</div>
 
-				<div class="form-group">
+				<div class="column-item">
 					<label for="releaseDate">Release Date</label>
-					<input type="date" class="form-control" id="releaseDate" placeholder="Enter release date" @bind="@newMovie.ReleaseDate" />
+					<input type="date" id="releaseDate" placeholder="Enter release date" @bind="@newMovie.ReleaseDate" />
 					<ValidationMessage For="@(() => newMovie.ReleaseDate)" />
 				</div>
 
-				<div class="form-group">
+				<div class="column-item">
 					<label for="duration">Duration</label>
-					<input type="number" class="form-control" id="duration" placeholder="Enter duration in minutes" @bind="@newMovie.Duration" />
+					<input type="number" id="duration" placeholder="Enter duration in minutes" @bind="@newMovie.Duration" />
 					<ValidationMessage For="@(() => newMovie.Duration)" />
 				</div>
 
-				<div class="form-group">
+				<div class="column-item">
 					<label for="director">Director</label>
-					<input type="text" class="form-control" id="director" placeholder="Enter director name" @bind="@newMovie.Director" />
+					<input type="text" id="director" placeholder="Enter director name" @bind="@newMovie.Director" />
 					<ValidationMessage For="@(() => newMovie.Director)" />
 				</div>
 
-				<div class="form-group">
-					<label for="tag">Tag</label>
-					<input type="text" class="form-control" id="tag" placeholder="Enter tag name" @bind="@TagInputValue" />
-					<button type="button" class="btn btn-primary ml-2 mb-2" @onclick="@AddTag">Add Tag</button>
+				<div class="column-item">
+					<label for="tag">Tags</label>
+					<input type="text" id="tag" placeholder="Enter tag name" @bind="@TagInputValue" @onkeyup="@AddTagInput"/>
+					<button type="button" class="btn btn-primary ml-2 mb-2" @onclick="@AddTagButton">Add Tag</button>
 				</div>
 
-				@if (Tags.Count > 0)
-				{
-					<ul>
-						@foreach (var tag in Tags)
-						{
-							<li>@tag</li>
-						}
-					</ul>
-				}
+				<div class="column-item" style="max-width: 36vw;">
+					@if (Tags.Count > 0)
+					{
+						<ul>
+							@foreach (var tag in Tags)
+							{
+								<li class="list-item">@tag</li>
+							}
+						</ul>
+					}
+				</div>
 
 			</div>
 		</div>
-
-		<div class="form-group">
-			<label for="description">Description</label>
-			<textarea class="form-control" id="description" rows="3" @bind="@newMovie.Description"></textarea>
-		</div>
-
-		<button type="submit" class="btn btn-primary">Submit</button>
 	</EditForm>
 </div>
 
 @code {
-	private Movie newMovie = new Movie { Title = "Title" };
+	private MovieDto newMovie = new MovieDto {};
 	private string? TagInputValue { get; set; }
 	private List<string> Tags { get; set; } = new List<string>();
 
-	private void AddTag()
+	private void AddTagButton()
 	{
 		if (!string.IsNullOrWhiteSpace(TagInputValue))
+		{
+			Tags.Add(TagInputValue);
+			TagInputValue = string.Empty;
+		}
+	}
+
+	private void AddTagInput(KeyboardEventArgs keyPressEvent)
+	{
+		if (!string.IsNullOrWhiteSpace(TagInputValue) && keyPressEvent.Key == "Enter")
 		{
 			Tags.Add(TagInputValue);
 			TagInputValue = string.Empty;

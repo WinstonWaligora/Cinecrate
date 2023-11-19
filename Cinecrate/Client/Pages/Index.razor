@@ -1,7 +1,321 @@
-﻿@page "/"
+@page "/"
+<link rel="stylesheet" href="~/css/styles.css" />
+<script type="text/javascript">
 
-<h1>Hello, world!</h1>
+    function GetIndex(sender) {
+        var aElements = sender.parentNode.parentNode.getElementsByTagName("a");
+        var aElementsLength = aElements.length;
 
-<p>
-	Welcome to your new app. This is the Blazor User Interface.
-</p>
+        var index;
+        for (var i = 0; i < aElementsLength; i++) {
+            if (aElements[i] == sender) //this condition is never true
+            {
+                index = i;
+                return index;
+            }
+        }
+    }
+    var grid = document.querySelector('.parent');
+    grid.onclick = rowCol;
+    function rowCol(e) {
+        // Get the expanded image
+        var expandImg = document.getElementById("expandedImg");
+        // Get the image text
+        var imgText = document.getElementById("imgtext");
+        // Use the same src in the expanded image as the image being clicked on from the grid
+        expandImg.src = imgs.src;
+        // Use the value of the alt attribute of the clickable image as text inside the expanded image
+        imgText.innerHTML = imgs.alt;
+        // Show the container element (hidden with CSS)
+        expandImg.parentElement.style.display = "block";
+
+    }
+    function myFunction(imgs) {
+        // Get the expanded image
+        var expandImg = document.getElementById("expandedImg");
+        // Get the image text
+        var imgText = document.getElementById("imgtext");
+        // Use the same src in the expanded image as the image being clicked on from the grid
+        expandImg.src = imgs.src;
+        // Use the value of the alt attribute of the clickable image as text inside the expanded image
+        imgText.innerHTML = imgs.alt;
+        // Show the container element (hidden with CSS)
+        expandImg.parentElement.style.display = "block";
+    }
+    function openCity(evt, cityName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // Reference the .gridcontainer
+    var grid = document.querySelector('.gridcontainer');
+
+    // Register click event to grid callback rowCol runs on click
+    grid.onclick = rowCol;
+
+    /*
+    Callback function rowCol() passes the Event Object...
+    if the clicked element (e.target) .matches() class .item...
+    get the clicked element's (ie .item) .closest() element .gridcontainer and
+    add/remove class .col or .row
+    */
+    function rowCol(e) {
+        if (e.target.matches('.item')) {
+            e.target.closest('.gridcontainer').classList.toggle('row');
+            e.target.closest('.gridcontainer').classList.toggle('col');
+        }
+        return false;
+    }
+</script>
+
+<div class="flex-box-2">
+    <h1> Cinecrate</h1>
+    <img src="add.png" style="height:60px;width:60px" onclick="window.open(this.src)">
+    <img src="search.png" style="height:60px;width:60px" onclick="window.open(this.src)">
+    <img src="filter.png" style="height:60px;width:60px" onclick="window.open(this.src)">
+</div>
+
+<div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'RECOMMENDED')">RECOMMENDED</button>
+    <button class="tablinks" onclick="openCity(event, 'TOP_RATED')">TOP RATED</button>
+    <button class="tablinks" onclick="openCity(event, 'RELEASE_DATE')">RELEASE DATE</button>
+    <button class="tablinks" onclick="openCity(event, 'A-Z')">A-Z</button>
+</div>
+
+<!-- Tab content -->
+<div id="RECOMMENDED" class="tabcontent">
+    <h3>RECOMMENDED MOVIE LIST </h3>
+    <p>Select the Movie to play </p>
+    <!-- The grid: four columns -->
+    <ul class="list">
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="document.location='default.html?imgIndex=img_nature.jpg'">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="GetIndex(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+    </ul>
+</div>
+
+<div id="TOP_RATED" class="tabcontent">
+    <h3>TOP RATED MOVIE LIST </h3>
+    <p>Select the Movie to play </p>
+    <ul class="list">
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+    </ul>
+</div>
+
+<div id="RELEASE_DATE" class="tabcontent">
+    <h3>London</h3>
+    <p>London is the capital city of England.</p>
+    <ul class="list">
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+    </ul>
+
+</div>
+<div id="A-Z" class="tabcontent">
+    <h3>London</h3>
+    <p>London is the capital city of England.</p>
+    <ul class="list">
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+        <li class="list-item">
+            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
+        </li>
+    </ul>
+</div>

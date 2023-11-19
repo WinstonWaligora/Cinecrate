@@ -1,17 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Cinecrate.Shared.Models;
+using Cinecrate.Shared.Entities;
 
 namespace Server.DbContexts
 {
     public class MovieInfoContext : DbContext
     {
-        public DbSet<Movie> Movie { get; set; }
-        public DbSet<Tag> Tag { get; set; }
-        public DbSet<MovieTag> MovieTag { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<MovieTag> MovieTags { get; set; }
+        public DbSet<Tag> Tags { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MovieTag>().HasKey(movieTag => new { movieTag.MovieId, movieTag.TagId });
-        }
+			modelBuilder.Entity<Movie>().ToTable("Movie");
+            modelBuilder.Entity<MovieTag>().ToTable("Movie Tag").HasKey(movieTag => new { movieTag.MovieId, movieTag.TagId });
+			modelBuilder.Entity<Tag>().ToTable("Tag");
+		}
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseSqlServer("connectionString");
