@@ -1,321 +1,332 @@
 @page "/"
-<link rel="stylesheet" href="~/css/styles.css" />
-<script type="text/javascript">
 
-    function GetIndex(sender) {
-        var aElements = sender.parentNode.parentNode.getElementsByTagName("a");
-        var aElementsLength = aElements.length;
+<!DOCTYPE html>
+<html lang="en">
 
-        var index;
-        for (var i = 0; i < aElementsLength; i++) {
-            if (aElements[i] == sender) //this condition is never true
-            {
-                index = i;
-                return index;
+<head>
+    <meta charset="utf-8" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body, h1, div {
+            margin: 0;
+            padding: 0;
+        }
+
+        .blue-bar {
+            height: 15.00vh;
+            background-color: #4052B6;
+            width: 100%;
+            position: relative;
+        }
+
+        .app-title {
+            color: white;
+            font-family: 'Dirga', sans-serif;
+            position: absolute;
+            top: 25%;
+            left: 10px;
+            transform: translateY(-50%);
+        }
+
+        .icon-btn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+
+            .icon-btn:hover i {
+                transform: scale(1.2);
+            }
+
+            .icon-btn i {
+                color: #ffffff;
+                transition: transform 0.3s ease;
+            }
+
+        .icon-container {
+            position: absolute;
+            top: 25%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #ffffff;
+        }
+
+        .text-buttons {
+            width: 100%; /* Ensures it takes up the full width of its container */
+            box-sizing: border-box; /* Ensures padding doesn't add to the width */
+            margin: 0; /* Removes any default margin */
+            padding: 0; /* Removes any default padding */
+            text-align: center;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .text-btn {
+            background-color: #4052B6;
+            color: #ffffff;
+            padding: 10px 20px;
+            margin: 0 50px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+
+        /* When the screen width is 768px or less */
+        @@media (max-width: 768px) {
+            .text-btn {
+                margin: 0 0px; /* Adjust the margin as needed */
+                font-size: 12px;
+            }
+
+            .icon-btn {
+                padding: 0px;
             }
         }
-    }
-    var grid = document.querySelector('.parent');
-    grid.onclick = rowCol;
-    function rowCol(e) {
-        // Get the expanded image
-        var expandImg = document.getElementById("expandedImg");
-        // Get the image text
-        var imgText = document.getElementById("imgtext");
-        // Use the same src in the expanded image as the image being clicked on from the grid
-        expandImg.src = imgs.src;
-        // Use the value of the alt attribute of the clickable image as text inside the expanded image
-        imgText.innerHTML = imgs.alt;
-        // Show the container element (hidden with CSS)
-        expandImg.parentElement.style.display = "block";
 
-    }
-    function myFunction(imgs) {
-        // Get the expanded image
-        var expandImg = document.getElementById("expandedImg");
-        // Get the image text
-        var imgText = document.getElementById("imgtext");
-        // Use the same src in the expanded image as the image being clicked on from the grid
-        expandImg.src = imgs.src;
-        // Use the value of the alt attribute of the clickable image as text inside the expanded image
-        imgText.innerHTML = imgs.alt;
-        // Show the container element (hidden with CSS)
-        expandImg.parentElement.style.display = "block";
-    }
-    function openCity(evt, cityName) {
-        // Declare all variables
-        var i, tabcontent, tablinks;
-
-        // Get all elements with class="tabcontent" and hide them
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+        .text-btn:hover {
+            background-color: #2f3d8a;
         }
 
-        // Get all elements with class="tablinks" and remove the class "active"
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        .active-btn {
+            border-bottom: 2px solid #ffffff;
         }
 
-        // Show the current tab, and add an "active" class to the button that opened the tab
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-
-    // Reference the .gridcontainer
-    var grid = document.querySelector('.gridcontainer');
-
-    // Register click event to grid callback rowCol runs on click
-    grid.onclick = rowCol;
-
-    /*
-    Callback function rowCol() passes the Event Object...
-    if the clicked element (e.target) .matches() class .item...
-    get the clicked element's (ie .item) .closest() element .gridcontainer and
-    add/remove class .col or .row
-    */
-    function rowCol(e) {
-        if (e.target.matches('.item')) {
-            e.target.closest('.gridcontainer').classList.toggle('row');
-            e.target.closest('.gridcontainer').classList.toggle('col');
+        .black-box {
+            background-color: #000000; /* Black background */
+            min-height: calc(100vh - 15vh); /* Takes up the rest of the viewport height */
         }
-        return false;
-    }
-</script>
 
-<div class="flex-box-2">
-    <h1> Cinecrate</h1>
-    <img src="add.png" style="height:60px;width:60px" onclick="window.open(this.src)">
-    <img src="search.png" style="height:60px;width:60px" onclick="window.open(this.src)">
-    <img src="filter.png" style="height:60px;width:60px" onclick="window.open(this.src)">
-</div>
+        /* Creation Screen */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
 
-<div class="tab">
-    <button class="tablinks" onclick="openCity(event, 'RECOMMENDED')">RECOMMENDED</button>
-    <button class="tablinks" onclick="openCity(event, 'TOP_RATED')">TOP RATED</button>
-    <button class="tablinks" onclick="openCity(event, 'RELEASE_DATE')">RELEASE DATE</button>
-    <button class="tablinks" onclick="openCity(event, 'A-Z')">A-Z</button>
-</div>
+        /* Creation Screen */
+        .modal-content {
+            background-color: #fff;
+            padding: 0;
+            border-radius: 5px;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            text-align: center;
+        }
 
-<!-- Tab content -->
-<div id="RECOMMENDED" class="tabcontent">
-    <h3>RECOMMENDED MOVIE LIST </h3>
-    <p>Select the Movie to play </p>
-    <!-- The grid: four columns -->
-    <ul class="list">
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="document.location='default.html?imgIndex=img_nature.jpg'">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="GetIndex(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-    </ul>
-</div>
+        /* Creation Screen */
+        .close-btn {
+            background-color: #4052B6;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            transition: transform 0.3s ease; /* Add transition for smooth scaling */
+        }
 
-<div id="TOP_RATED" class="tabcontent">
-    <h3>TOP RATED MOVIE LIST </h3>
-    <p>Select the Movie to play </p>
-    <ul class="list">
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-    </ul>
-</div>
+            /* Creation Screen */
+            .close-btn:hover {
+                transform: scale(1.2); /* Scale the button up to 120% on hover */
+            }
 
-<div id="RELEASE_DATE" class="tabcontent">
-    <h3>London</h3>
-    <p>London is the capital city of England.</p>
-    <ul class="list">
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-    </ul>
+        /* Creation Screen */
+        .save-btn {
+            background-color: #4052B6;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            transition: transform 0.3s ease; /* Add transition for smooth scaling */
+        }
 
-</div>
-<div id="A-Z" class="tabcontent">
-    <h3>London</h3>
-    <p>London is the capital city of England.</p>
-    <ul class="list">
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-    </ul>
-</div>
+            /* Creation Screen */
+            .save-btn:hover {
+                transform: scale(1.2); /* Scale the button up to 120% on hover */
+            }
+
+        /* Detail Screen */
+        .detailPage {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Detail Screen */
+        .detailPage-content {
+            background-color: #fff;
+            padding: 0;
+            border-radius: 5px;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            text-align: center;
+        }
+
+        /* Detail Screen */
+        .close2-btn {
+            background-color: #4052B6;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            transition: transform 0.3s ease; /* Add transition for smooth scaling */
+        }
+
+            /* Detail Screen */
+            .close2-btn:hover {
+                transform: scale(1.2); /* Scale the button up to 120% on hover */
+            }
+
+        /* Detail Screen */
+        .delete-btn {
+            background-color: #4052B6;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            transition: transform 0.3s ease; /* Add transition for smooth scaling */
+        }
+
+        /* Detail Screen */
+        .delete-btn:hover {
+            transform: scale(1.2); /* Scale the button up to 120% on hover */
+        }
+
+        /* Detail Screen */
+        .edit-btn {
+            background-color: #4052B6;
+            color: #ffffff;
+            padding: 10px 75px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            transition: transform 0.3s ease; /* Add transition for smooth scaling */
+        }
+
+            /* Detail Screen */
+            .edit-btn:hover {
+                transform: scale(1.2); /* Scale the button up to 120% on hover */
+            }
+
+
+    </style>
+</head>
+
+<body>
+    <div class="blue-bar">
+        <h1 class="app-title">Cinecrate</h1>
+        <div class="icon-container">
+            <button class="icon-btn" onclick="showModal('myModal')"><i class="fas fa-plus"></i></button>
+            <button class="icon-btn" onclick="showModal('myDetailPage')"><i class="fas fa-search"></i></button> 
+           @*  Search button currently setup to load movie detail page. Will need to change this once search code is provided. *@
+            <button class="icon-btn" onclick="buttonFunctionName3()"><i class="fas fa-filter"></i></button>
+        </div>
+        <div class="text-buttons">
+            <span class="text-btn" onclick="setActiveButton(this)">RECOMMENDED</span>
+            <span class="text-btn" onclick="setActiveButton(this)">TOP RATED</span>
+            <span class="text-btn" onclick="setActiveButton(this)">RELEASE DATE</span>
+            <span class="text-btn" onclick="setActiveButton(this)">A-Z</span>
+        </div>
+    </div>
+    <div class="black-box">
+        <!-- ... any content inside the black box ... -->
+    </div>
+
+    <!-- First Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="blue-bar">
+                <h1 class="app-title">Cinecrate</h1>
+                <button class="close-btn" onclick="closeModal('myModal')"><i class="fas fa-arrow-left"></i></button>
+                <button class="save-btn" onclick="saveFunction()"><i class="fas fa-save"></i></button>
+            </div>
+            <div class="black-box">
+                <!-- ... content inside the black box ... -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Page Modal -->
+    <div id="myDetailPage" class="modal">
+        <div class="modal-content">
+            <div class="blue-bar">
+                <h1 class="app-title">Cinecrate</h1>
+                <button class="close-btn" onclick="closeModal('myDetailPage')"><i class="fas fa-arrow-left"></i></button>
+                <button class="edit-btn" onclick="editFunction()"><i class="fas fa-edit"></i></button>
+                <button class="delete-btn" onclick="deleteFunction()"><i class="fas fa-trash-alt"></i></button>
+            </div>
+            <div class="black-box">
+                <!-- ... content inside the black box ... -->
+            </div>
+        </div>
+    </div>
+    <script>
+        function setActiveButton(element) {
+            document.querySelectorAll('.text-btn').forEach(btn => {
+                btn.classList.remove('active-btn');
+            });
+            element.classList.add('active-btn');
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function buttonFunctionName3() {
+            // Code for the 'filter' button click event
+        }
+
+        function saveFunction() {
+            // Code to execute when the 'Save' button is clicked
+        }
+    </script>
+</body>
+
+</html>
