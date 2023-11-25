@@ -23,7 +23,7 @@ namespace Server.Controllers
 		[Produces("application/json")]
 		public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
 		{
-			var movieDtos = await _movieService.GetMoviesWithTags();
+            var movieDtos = await _movieService.GetMoviesWithTags();
 			if (movieDtos == null)
 			{
 				return NotFound();

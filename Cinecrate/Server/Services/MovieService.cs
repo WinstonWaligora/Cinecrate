@@ -21,8 +21,8 @@ namespace Cinecrate.Server.Services
 			var movie = _mapper.Map<Movie>(movieWithTagsDto);
 			_context.Movies.Add(movie);
 
-			var tags = movieWithTagsDto.Tags ?? new List<TagDto>();
-			foreach (var tagDto in tags)
+			var tagDtos = movieWithTagsDto.Tags ?? new List<TagDto>();
+			foreach (var tagDto in tagDtos)
 			{
 				var tag = _mapper.Map<Tag>(tagDto);
 				_context.Tags.Add(tag);

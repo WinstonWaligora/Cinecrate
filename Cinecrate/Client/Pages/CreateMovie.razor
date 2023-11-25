@@ -6,90 +6,97 @@
 <Header />
 
 <div class="main-content">
-	<EditForm Model="@newMovie" OnValidSubmit="@handleValidSubmit">
-		<div class="row">
-			<div class="column">
-				<div class="add-poster column-item" style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw;">
-					<i class="fas fa-plus fa-2xl"></i>
-				</div>
-				<div class="column-item">
-					<label for="description">Description</label>
-					<textarea id="description" rows="3" style="max-width: 41vw;" @bind="@newMovie.Description"></textarea>
-				</div>
-			</div>
-			<div class="column">
-				<div class="column-item">
-					<label for="title">Title</label>
-					<input type="text" id="title" placeholder="Enter movie title" @bind="@newMovie.Title" />
-					<ValidationMessage For="@(() => newMovie.Title)" />
-				</div>
+    <EditForm Model="@newMovieWithTagsDto" OnValidSubmit="@handleValidSubmit">
+        <div class="row">
+            <div class="column">
+                <div class="add-poster column-item" style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw;">
+                    <i class="fas fa-plus fa-2xl"></i>
+                </div>
+                <div class="column-item">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="3" style="max-width: 41vw;" @bind="@newMovieWithTagsDto.Description"></textarea>
+                </div>
+                <div class="column-item">
+                    <button type="submit" style="border: none;">
+                        <i class="fas fa-save fa-2xl"></i>
+                    </button>
+                </div>
+            </div>
 
-				<div class="column-item">
-					<label for="releaseDate">Release Date</label>
-					<input type="date" id="releaseDate" placeholder="Enter release date" @bind="@newMovie.ReleaseDate" />
-					<ValidationMessage For="@(() => newMovie.ReleaseDate)" />
-				</div>
+            <div class="column">
+                <div class="column-item">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" placeholder="Enter movie title" @bind="@newMovieWithTagsDto.Title" />
+                    <ValidationMessage For="@(() => newMovieWithTagsDto.Title)" />
+                </div>
 
-				<div class="column-item">
-					<label for="duration">Duration</label>
-					<input type="number" id="duration" placeholder="Enter duration in minutes" @bind="@newMovie.Duration" />
-					<ValidationMessage For="@(() => newMovie.Duration)" />
-				</div>
+                <div class="column-item">
+                    <label for="releaseDate">Release Date</label>
+                    <input type="date" id="releaseDate" placeholder="Enter release date" @bind="@newMovieWithTagsDto.ReleaseDate" />
+                    <ValidationMessage For="@(() => newMovieWithTagsDto.ReleaseDate)" />
+                </div>
 
-				<div class="column-item">
-					<label for="director">Director</label>
-					<input type="text" id="director" placeholder="Enter director name" @bind="@newMovie.Director" />
-					<ValidationMessage For="@(() => newMovie.Director)" />
-				</div>
+                <div class="column-item">
+                    <label for="duration">Duration</label>
+                    <input type="number" id="duration" placeholder="Enter duration in minutes" @bind="@newMovieWithTagsDto.Duration" />
+                    <ValidationMessage For="@(() => newMovieWithTagsDto.Duration)" />
+                </div>
 
-				<div class="column-item">
-					<label for="tag">Tags</label>
-					<input type="text" id="tag" placeholder="Enter tag name" @bind="@TagInputValue" @onkeyup="@AddTagInput"/>
-					<button type="button" class="btn btn-primary ml-2 mb-2" @onclick="@AddTagButton">Add Tag</button>
-				</div>
+                <div class="column-item">
+                    <label for="director">Director</label>
+                    <input type="text" id="director" placeholder="Enter director name" @bind="@newMovieWithTagsDto.Director" />
+                    <ValidationMessage For="@(() => newMovieWithTagsDto.Director)" />
+                </div>
 
-				<div class="column-item" style="max-width: 36vw;">
-					@if (Tags.Count > 0)
-					{
-						<ul>
-							@foreach (var tag in Tags)
-							{
-								<li class="list-item">@tag</li>
-							}
-						</ul>
-					}
-				</div>
+                <div class="column-item">
+                    <label for="tag">Tags</label>
+                    <input type="text" id="tag" placeholder="Enter tag name" @bind="@TagInputValue" @onkeyup="@AddTagInput" />
+                    <button type="button" class="btn ml-2 mb-2" @onclick="@AddTagButton">Add Tag</button>
+                </div>
 
-			</div>
-		</div>
-	</EditForm>
+                <div class="column-item" style="max-width: 36vw;">
+                    @if (newMovieWithTagsDto.Tags?.Count() > 0)
+                    {
+                        <ul>
+                            @foreach (var tag in newMovieWithTagsDto.Tags)
+                            {
+                                <li class="list-item">@tag.Name</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </EditForm>
 </div>
 
 @code {
-	private MovieDto newMovie = new MovieDto {};
-	private string? TagInputValue { get; set; }
-	private List<string> Tags { get; set; } = new List<string>();
+    private readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:7189") };
+    private MovieWithTagsDto newMovieWithTagsDto = new MovieWithTagsDto { Tags = new List<TagDto>() };
+    private string? TagInputValue { get; set; }
 
-	private void AddTagButton()
-	{
-		if (!string.IsNullOrWhiteSpace(TagInputValue))
-		{
-			Tags.Add(TagInputValue);
-			TagInputValue = string.Empty;
-		}
-	}
+    private void AddTagButton()
+    {
+        if (!string.IsNullOrWhiteSpace(TagInputValue))
+        {
+            newMovieWithTagsDto.Tags = newMovieWithTagsDto.Tags?.Append(new TagDto { Name = TagInputValue }).ToList();
+            TagInputValue = string.Empty;
+        }
+    }
 
-	private void AddTagInput(KeyboardEventArgs keyPressEvent)
-	{
-		if (!string.IsNullOrWhiteSpace(TagInputValue) && keyPressEvent.Key == "Enter")
-		{
-			Tags.Add(TagInputValue);
-			TagInputValue = string.Empty;
-		}
-	}
+    private void AddTagInput(KeyboardEventArgs keyPressEvent)
+    {
+        if (!string.IsNullOrWhiteSpace(TagInputValue) && keyPressEvent.Key == "Enter")
+        {
+            newMovieWithTagsDto.Tags = newMovieWithTagsDto.Tags?.Append(new TagDto { Name = TagInputValue }).ToList();
+            TagInputValue = string.Empty;
+        }
+    }
 
-	private void handleValidSubmit()
-	{
-		throw new NotImplementedException();
-	}
+    private async Task handleValidSubmit()
+    {
+        newMovieWithTagsDto.Poster = Convert.ToBase64String(new Byte[0]);
+        var response = await httpClient.PostAsJsonAsync("/Movies", newMovieWithTagsDto);
+        response.EnsureSuccessStatusCode();
+    }
 }
