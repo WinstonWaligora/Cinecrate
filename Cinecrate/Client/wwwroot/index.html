@@ -24,6 +24,100 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
+<<<<<<< HEAD
+=======
+    <script type="text/javascript">
+
+        function GetIndex(sender) {
+            var aElements = sender.parentNode.parentNode.getElementsByTagName("a");
+            var aElementsLength = aElements.length;
+
+            var index;
+            for (var i = 0; i < aElementsLength; i++) {
+                if (aElements[i] == sender) //this condition is never true
+                {
+                    index = i;
+                    return index;
+                }
+            }
+        }
+        var grid = document.querySelector('.parent');
+        grid.onclick = rowCol;
+        function rowCol(e) {
+            // Get the expanded image
+            var expandImg = document.getElementById("expandedImg");
+            // Get the image text
+            var imgText = document.getElementById("imgtext");
+            // Use the same src in the expanded image as the image being clicked on from the grid
+            expandImg.src = imgs.src;
+            // Use the value of the alt attribute of the clickable image as text inside the expanded image
+            imgText.innerHTML = imgs.alt;
+            // Show the container element (hidden with CSS)
+            expandImg.parentElement.style.display = "block";
+
+        }
+        function myFunction(imgs) {
+            // Get the expanded image
+            var expandImg = document.getElementById("expandedImg");
+            // Get the image text
+            var imgText = document.getElementById("imgtext");
+            // Use the same src in the expanded image as the image being clicked on from the grid
+            expandImg.src = imgs.src;
+            // Use the value of the alt attribute of the clickable image as text inside the expanded image
+            imgText.innerHTML = imgs.alt;
+            // Show the container element (hidden with CSS)
+            expandImg.parentElement.style.display = "block";
+        }
+        function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Reference the .gridcontainer
+        var grid = document.querySelector('.gridcontainer');
+
+        // Register click event to grid callback rowCol runs on click
+        grid.onclick = rowCol;
+
+        /*
+        Callback function rowCol() passes the Event Object...
+        if the clicked element (e.target) .matches() class .item...
+        get the clicked element's (ie .item) .closest() element .gridcontainer and
+        add/remove class .col or .row
+        */
+        function rowCol(e) {
+            if (e.target.matches('.item')) {
+                e.target.closest('.gridcontainer').classList.toggle('row');
+                e.target.closest('.gridcontainer').classList.toggle('col');
+            }
+            return false;
+        }
+    </script>
+    <script>
+        function setActiveButton(element) {
+            document.querySelectorAll('.text-btn').forEach(btn => {
+                btn.classList.remove('active-btn');
+            });
+            element.classList.add('active-btn');
+        }
+    </script>
+>>>>>>> 3f5e4a0 (home page; header; styling)
 </body>
 
 </html>
