@@ -9,7 +9,6 @@ namespace Cinecrate.Server.Profiles
         public TagProfile()
         {
             CreateMap<Tag, TagDto>().ReverseMap();
-            //CreateMap<TagDto, Tag>();
         }
     }
 }
