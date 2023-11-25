@@ -1,74 +1,77 @@
 ﻿@page "/create-movie"
-@using Cinecrate.Client.Shared
 @using Cinecrate.Shared.Models
 @using Microsoft.AspNetCore.Components.Forms
+@inject NavigationManager Navigation
 
-<Header />
+<div class="blue-bar">
+    <h1 class="app-title">Cinecrate</h1>
+    <div class="icon-container">
+        <button class="icon-btn" @onclick="NavigateToHome">
+            <i class="fas fa-arrow-left fa-2xl"></i>
+        </button>
+        <button class="icon-btn" type="submit" style="border: none;" @onclick="HandleValidSubmit">
+            <i class="fas fa-save fa-2xl"></i>
+        </button>
+    </div>
+</div>
 
-<div class="main-content">
-    <EditForm Model="@newMovieWithTagsDto" OnValidSubmit="@handleValidSubmit">
-        <div class="row">
-            <div class="column">
-                <div class="add-poster column-item" style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw;">
-                    <i class="fas fa-plus fa-2xl"></i>
-                </div>
-                <div class="column-item">
-                    <label for="description">Description</label>
-                    <textarea id="description" rows="3" style="max-width: 41vw;" @bind="@newMovieWithTagsDto.Description"></textarea>
-                </div>
-                <div class="column-item">
-                    <button type="submit" style="border: none;">
-                        <i class="fas fa-save fa-2xl"></i>
-                    </button>
-                </div>
+<EditForm Model="@newMovieWithTagsDto">
+    <div class="row">
+        <div class="column">
+            <div class="add-poster column-item" style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw;">
+                <i class="fas fa-plus fa-2xl"></i>
             </div>
-
-            <div class="column">
-                <div class="column-item">
-                    <label for="title">Title</label>
-                    <input type="text" id="title" placeholder="Enter movie title" @bind="@newMovieWithTagsDto.Title" />
-                    <ValidationMessage For="@(() => newMovieWithTagsDto.Title)" />
-                </div>
-
-                <div class="column-item">
-                    <label for="releaseDate">Release Date</label>
-                    <input type="date" id="releaseDate" placeholder="Enter release date" @bind="@newMovieWithTagsDto.ReleaseDate" />
-                    <ValidationMessage For="@(() => newMovieWithTagsDto.ReleaseDate)" />
-                </div>
-
-                <div class="column-item">
-                    <label for="duration">Duration</label>
-                    <input type="number" id="duration" placeholder="Enter duration in minutes" @bind="@newMovieWithTagsDto.Duration" />
-                    <ValidationMessage For="@(() => newMovieWithTagsDto.Duration)" />
-                </div>
-
-                <div class="column-item">
-                    <label for="director">Director</label>
-                    <input type="text" id="director" placeholder="Enter director name" @bind="@newMovieWithTagsDto.Director" />
-                    <ValidationMessage For="@(() => newMovieWithTagsDto.Director)" />
-                </div>
-
-                <div class="column-item">
-                    <label for="tag">Tags</label>
-                    <input type="text" id="tag" placeholder="Enter tag name" @bind="@TagInputValue" @onkeyup="@AddTagInput" />
-                    <button type="button" class="btn ml-2 mb-2" @onclick="@AddTagButton">Add Tag</button>
-                </div>
-
-                <div class="column-item" style="max-width: 36vw;">
-                    @if (newMovieWithTagsDto.Tags?.Count() > 0)
-                    {
-                        <ul>
-                            @foreach (var tag in newMovieWithTagsDto.Tags)
-                            {
-                                <li class="list-item">@tag.Name</li>
-                            }
-                        </ul>
-                    }
-                </div>
+            <div class="column-item">
+                <label for="description">Description</label>
+                <textarea id="description" rows="3" style="max-width: 41vw;" @bind="@newMovieWithTagsDto.Description"></textarea>
             </div>
         </div>
-    </EditForm>
-</div>
+
+        <div class="column">
+            <div class="column-item">
+                <label for="title">Title</label>
+                <input type="text" id="title" placeholder="Enter movie title" @bind="@newMovieWithTagsDto.Title" />
+                <ValidationMessage For="@(() => newMovieWithTagsDto.Title)" />
+            </div>
+
+            <div class="column-item">
+                <label for="releaseDate">Release Date</label>
+                <input type="date" id="releaseDate" placeholder="Enter release date" @bind="@newMovieWithTagsDto.ReleaseDate" />
+                <ValidationMessage For="@(() => newMovieWithTagsDto.ReleaseDate)" />
+            </div>
+
+            <div class="column-item">
+                <label for="duration">Duration</label>
+                <input type="number" id="duration" placeholder="Enter duration in minutes" @bind="@newMovieWithTagsDto.Duration" />
+                <ValidationMessage For="@(() => newMovieWithTagsDto.Duration)" />
+            </div>
+
+            <div class="column-item">
+                <label for="director">Director</label>
+                <input type="text" id="director" placeholder="Enter director name" @bind="@newMovieWithTagsDto.Director" />
+                <ValidationMessage For="@(() => newMovieWithTagsDto.Director)" />
+            </div>
+
+            <div class="column-item">
+                <label for="tag">Tags</label>
+                <input type="text" id="tag" placeholder="Enter tag name" @bind="@TagInputValue" @onkeyup="@AddTagInput" />
+                <button type="button" class="btn ml-2 mb-2" @onclick="@AddTagButton">Add Tag</button>
+            </div>
+
+            <div class="column-item" style="max-width: 36vw;">
+                @if (newMovieWithTagsDto.Tags?.Count() > 0)
+                {
+                    <ul>
+                        @foreach (var tag in newMovieWithTagsDto.Tags)
+                        {
+                            <li class="list-item">@tag.Name</li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</EditForm>
 
 @code {
     private readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:7189") };
@@ -93,10 +96,16 @@
         }
     }
 
-    private async Task handleValidSubmit()
+    private async Task HandleValidSubmit()
     {
         newMovieWithTagsDto.Poster = Convert.ToBase64String(new Byte[0]);
         var response = await httpClient.PostAsJsonAsync("/Movies", newMovieWithTagsDto);
         response.EnsureSuccessStatusCode();
+    }
+
+    private void NavigateToHome()
+    {
+
+        Navigation.NavigateTo("/");
     }
 }
