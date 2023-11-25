@@ -105,6 +105,14 @@
             return false;
         }
     </script>
+    <script>
+        function setActiveButton(element) {
+            document.querySelectorAll('.text-btn').forEach(btn => {
+                btn.classList.remove('active-btn');
+            });
+            element.classList.add('active-btn');
+        }
+    </script>
 </body>
 
 </html>
