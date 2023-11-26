@@ -1,88 +1,15 @@
 @page "/"
+@using System.Net;
+@using Cinecrate.Shared.Entities;
+@using System.Text.Json;
+@using System.Text.Json.Serialization
+@using System.Runtime.Serialization;
+@inject IHttpClientFactory ClientFactory
+
+@inject IHttpClientFactory ClientFactory
+
+
 <link rel="stylesheet" href="~/css/styles.css" />
-<script type="text/javascript">
-
-    function GetIndex(sender) {
-        var aElements = sender.parentNode.parentNode.getElementsByTagName("a");
-        var aElementsLength = aElements.length;
-
-        var index;
-        for (var i = 0; i < aElementsLength; i++) {
-            if (aElements[i] == sender) //this condition is never true
-            {
-                index = i;
-                return index;
-            }
-        }
-    }
-    var grid = document.querySelector('.parent');
-    grid.onclick = rowCol;
-    function rowCol(e) {
-        // Get the expanded image
-        var expandImg = document.getElementById("expandedImg");
-        // Get the image text
-        var imgText = document.getElementById("imgtext");
-        // Use the same src in the expanded image as the image being clicked on from the grid
-        expandImg.src = imgs.src;
-        // Use the value of the alt attribute of the clickable image as text inside the expanded image
-        imgText.innerHTML = imgs.alt;
-        // Show the container element (hidden with CSS)
-        expandImg.parentElement.style.display = "block";
-
-    }
-    function myFunction(imgs) {
-        // Get the expanded image
-        var expandImg = document.getElementById("expandedImg");
-        // Get the image text
-        var imgText = document.getElementById("imgtext");
-        // Use the same src in the expanded image as the image being clicked on from the grid
-        expandImg.src = imgs.src;
-        // Use the value of the alt attribute of the clickable image as text inside the expanded image
-        imgText.innerHTML = imgs.alt;
-        // Show the container element (hidden with CSS)
-        expandImg.parentElement.style.display = "block";
-    }
-    function openCity(evt, cityName) {
-        // Declare all variables
-        var i, tabcontent, tablinks;
-
-        // Get all elements with class="tabcontent" and hide them
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-
-        // Get all elements with class="tablinks" and remove the class "active"
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-
-        // Show the current tab, and add an "active" class to the button that opened the tab
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-
-    // Reference the .gridcontainer
-    var grid = document.querySelector('.gridcontainer');
-
-    // Register click event to grid callback rowCol runs on click
-    grid.onclick = rowCol;
-
-    /*
-    Callback function rowCol() passes the Event Object...
-    if the clicked element (e.target) .matches() class .item...
-    get the clicked element's (ie .item) .closest() element .gridcontainer and
-    add/remove class .col or .row
-    */
-    function rowCol(e) {
-        if (e.target.matches('.item')) {
-            e.target.closest('.gridcontainer').classList.toggle('row');
-            e.target.closest('.gridcontainer').classList.toggle('col');
-        }
-        return false;
-    }
-</script>
 
 <div class="flex-box-2">
     <h1> Cinecrate</h1>
@@ -97,225 +24,179 @@
     <button class="tablinks" onclick="openCity(event, 'RELEASE_DATE')">RELEASE DATE</button>
     <button class="tablinks" onclick="openCity(event, 'A-Z')">A-Z</button>
 </div>
+@if (getBranchesError || movies is null)
+{
+    <p>Unable to get branches from GitHub. Please try again later.</p>
+}
+else
+{
 
 <!-- Tab content -->
 <div id="RECOMMENDED" class="tabcontent">
-    <h3>RECOMMENDED MOVIE LIST </h3>
-    <p>Select the Movie to play </p>
-    <!-- The grid: four columns -->
-    <ul class="list">
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="document.location='default.html?imgIndex=img_nature.jpg'">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="GetIndex(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_nature.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-    </ul>
+
+    <table>
+<tbody>
+   
+     <tr>
+          @{ var a = 0; }
+            @foreach (MovieJson s in RecommendedMovies)
+        {
+            <td style="text-align: center;">
+            <a href="/Create-Movie">
+            <img style="max-width: 300PX;" src="img_mountains.jpg" >
+            <p><span style="font-size: 200%; color: #749d36;">    @s.Title</span></p>
+                        </a>
+            </td>
+
+                if(++a % 5 == 0)
+                {
+                    @:</tr><tr>
+                }
+             }
+        </tr>
+        </tbody>
+        </table>
+
 </div>
 
 <div id="TOP_RATED" class="tabcontent">
-    <h3>TOP RATED MOVIE LIST </h3>
-    <p>Select the Movie to play </p>
-    <ul class="list">
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_mountains.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-    </ul>
+
+    <table>
+<tbody>
+   
+     <tr>
+          @{ var b = 0; }
+            @foreach (MovieJson s in RatingList)
+        {
+            <td style="text-align: center;">
+            <a href="/Create-Movie">
+            <img style="max-width: 300px;" src="img_mountains.jpg" >
+            <p><span style="font-size: 200%; color: #749d36;">    @s.Title</span></p>
+                        </a>
+            </td>
+
+                if(++b % 5 == 0)
+                {
+                    @:</tr><tr>
+                }
+             }
+        </tr>
+        </tbody>
+        </table>
+
 </div>
 
 <div id="RELEASE_DATE" class="tabcontent">
-    <h3>London</h3>
-    <p>London is the capital city of England.</p>
-    <ul class="list">
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-    </ul>
+
+    <table>
+<tbody>
+   
+     <tr>
+          @{ var c = 0; }
+            @foreach (MovieJson s in ReleaseDateList)
+        {
+            <td style="text-align: center;">
+            <a href="/Create-Movie">
+            <img style="max-width: 300px;" src="img_mountains.jpg" >
+            <p><span style="font-size: 200%; color: #749d36;">    @s.Title</span></p>
+                        </a>
+            </td>
+
+                if(++c % 5 == 0)
+                {
+                    @:</tr><tr>
+                }
+             }
+        </tr>
+        </tbody>
+        </table>
 
 </div>
 <div id="A-Z" class="tabcontent">
-    <h3>London</h3>
-    <p>London is the capital city of England.</p>
-    <ul class="list">
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-        <li class="list-item">
-            <img src="img_lights.jpg" alt="Nature" style="width:90%" onclick="myFunction(this);">
-        </li>
-    </ul>
+
+    <table>
+<tbody>
+   
+     <tr>
+          @{ var d = 0; }
+            @foreach (MovieJson s in OrderedList)
+        {
+            <td style="text-align: center;">
+            <a href="/Create-Movie">
+            <img style="max-width: 300px;" src="img_mountains.jpg" >
+            <p><span style="font-size: 200%; color: #749d36;">    @s.Title</span></p>
+                        </a>
+            </td>
+
+                if(++d % 5 == 0)
+                {
+                    @:</tr><tr>
+                }
+             }
+        </tr>
+        </tbody>
+        </table>
 </div>
+}
+@code{
+    private IEnumerable<MovieJson>? movies = Array.Empty<MovieJson>();
+    private IEnumerable<MovieJson>? OrderedList = Array.Empty<MovieJson>();
+    private IEnumerable<MovieJson>? ReleaseDateList = Array.Empty<MovieJson>();
+    private IEnumerable<MovieJson>? RecommendedMovies = Array.Empty<MovieJson>();
+    private IEnumerable<MovieJson>? RatingList = Array.Empty<MovieJson>();
+    private bool getBranchesError;
+    private bool shouldRender;
+
+    protected override bool ShouldRender() => shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            "https://localhost:7191/Movies");
+
+        var client = ClientFactory.CreateClient();
+
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+
+            movies = await JsonSerializer.DeserializeAsync
+                <IEnumerable<MovieJson>>(responseStream);
+            OrderedList = (movies.OrderBy(g => g.Title));
+            ReleaseDateList = (movies.OrderBy(g => g.ReleaseDate));
+
+            var r = new Random(DateTime.Now.Millisecond);
+            RecommendedMovies = movies.OrderBy(x => r.Next()).ToList(); ;
+            RatingList = (movies.OrderBy(g => g.Rating));
+        }
+        else
+        {
+            getBranchesError = true;
+        }
+
+        shouldRender = true;
+    }
+
+    public class MovieJson
+    {
+        [JsonPropertyName("description")]
+        public string? Description { get; set; }
+        [JsonPropertyName("director")]
+        public string? Director { get; set; }
+        [JsonPropertyName("duration")]
+        public int? Duration { get; set; }
+        [JsonPropertyName("movieId")]
+        public Guid? MovieId { get; set; }
+        [JsonPropertyName("poster")]
+        public string? Poster { get; set; }
+        [JsonPropertyName("rating")]
+        public char? Rating { get; set; }
+        [JsonPropertyName("releaseDate")]
+        public DateTime? ReleaseDate { get; set; }
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+
+    }
+}
