@@ -8,6 +8,8 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <script src="https://kit.fontawesome.com/a86dfaae89.js" crossorigin="anonymous"></script>
+    <link href="toastr.css" rel="stylesheet" />
+    <script src="toastr.js"></script>
     <!-- If you add any scoped CSS files, uncomment the following to load them
     <link href="Cinecrate.Client.styles.css" rel="stylesheet" /> -->
 </head>
@@ -22,6 +24,14 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        function setActiveButton(element) {
+            document.querySelectorAll('.text-btn').forEach(btn => {
+                btn.classList.remove('active-btn');
+            });
+            element.classList.add('active-btn');
+        }
+    </script>
 </body>
 
 </html>

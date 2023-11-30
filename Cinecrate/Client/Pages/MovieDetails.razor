@@ -2,14 +2,24 @@
 @using Cinecrate.Shared.Models
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
+@inject IJSRuntime JSRuntime
 
+<div class="blue-bar">
+	<h1 class="app-title">Cinecrate</h1>
+	<div class="icon-container">
 
+		<button class="icon-btn" style="border:none;" @onclick="GoBack">
+			<i class="fas fa-arrow-left fa-2xl"></i>
+		</button>
 
-<h1>Movie Details</h1>
-<div class="button-container">
-	<button class="back-button" @onclick="GoBack">Back</button>
-	<button class="delete-button" @onclick="DeleteMovie">DELETE</button>
+		<button class="icon-btn" style="border: none;" @onclick="DeleteMovie">
+			<i class="fas fa-trash fa-2xl"></i>
+		</button>
+		
+	</div>
 </div>
+
+
 
 @if (movieDetails is null)
 {
@@ -24,10 +34,7 @@ else
 
 			</div>
 
-
 		</div>
-
-
 
 		<div class="column">
 			<div class="movie-details">
@@ -58,7 +65,7 @@ else
 
 		<div class="column">
 			<div class="column-item">
-				<span class="stars">&#9733;&#9733;&#9733;&#9733;</span>
+				<span class="stars">Ratings </span>
 				<span>@movieDetails.Rating /5</span>
 
 			</div>
@@ -83,15 +90,18 @@ else
 
 
 @code {
+	// [Inject]
+	// private IToastService ToastService { get; set; }
 	[Parameter]
 	public string? movieID { get; set; }
 
 	private MovieWithTagsDto? movieDetails { get; set; }
 
+
 	[Parameter]
 	public string? tagId { get; set; }
 
-	private List<string> Tag { get; set; } = new List<string>();
+	private List<string?> Tag { get; set; } = new List<string?>();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -107,10 +117,7 @@ else
 				Tag = movieDetails.Tags.Select(tag => tag.Name).ToList();
 			}
 
-
 		}
-
-
 
 	}
 
@@ -124,6 +131,11 @@ else
 			if (response.IsSuccessStatusCode)
 			{
 				// Handle successful deletion, such as navigating back to a movie list page
+				await JSRuntime.InvokeVoidAsync("alert", "Movie deleted successfully!");
+				// await ToastService.ShowSuccess("Movie deleted successfully!","");
+
+				 // ToastService.ShowSuccess("Movie deleted successfully!"); 
+
 				navigationManager.NavigateTo("/");
 			}
 			else
@@ -131,6 +143,7 @@ else
 				string ErrorMessage;
 				// Handle failure,
 				var errorMessage = await response.Content.ReadAsStringAsync();
+				await JSRuntime.InvokeVoidAsync("alert", "Failed to delete");
 				ErrorMessage = $"Failed to delete the movie. Error: {errorMessage}";
 			}
 		}
@@ -141,6 +154,4 @@ else
 		// Navigate back to the movies page
 		navigationManager.NavigateTo("/");
 	}
-
-
 }

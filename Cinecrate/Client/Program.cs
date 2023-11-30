@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Cinecrate.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -10,5 +11,6 @@ builder.Services.AddHttpClient("Cinecrate.ServerAPI", client => client.BaseAddre
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Cinecrate.ServerAPI"));
-
+builder.Services.AddBlazoredToast();
 await builder.Build().RunAsync();
+
