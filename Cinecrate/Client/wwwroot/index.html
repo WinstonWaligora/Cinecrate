@@ -22,6 +22,26 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        function setActiveButton(element) {
+            document.querySelectorAll('.text-btn').forEach(btn => {
+                btn.classList.remove('active-btn');
+            });
+            element.classList.add('active-btn');
+        }
+        function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent;
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
 </body>
 
 </html>

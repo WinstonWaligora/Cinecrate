@@ -5,139 +5,133 @@
 @using System.Text.Json.Serialization
 @using System.Runtime.Serialization;
 @inject IHttpClientFactory ClientFactory
+@inject NavigationManager Navigation
 
-@inject IHttpClientFactory ClientFactory
-
-
-<link rel="stylesheet" href="~/css/styles.css" />
-
-<div class="flex-box-2">
-    <h1> Cinecrate</h1>
-    <img src="add.png" style="height:60px;width:60px" onclick="window.open(this.src)">
-    <img src="search.png" style="height:60px;width:60px" onclick="window.open(this.src)">
-    <img src="filter.png" style="height:60px;width:60px" onclick="window.open(this.src)">
+<div class="blue-bar">
+    <h1 class="app-title">Cinecrate</h1>
+    <div class="icon-container">
+        <button class="icon-btn" @onclick="NavigateToCreateMovie"><i class="fas fa-plus fa-2xl"></i></button>
+        <button class="icon-btn" @onclick="NavigateToMovieDetails"><i class="fas fa-search fa-2xl"></i></button>
+        @*  Search button currently setup to load movie detail page. Will need to change this once search code is provided. *@
+        <button class="icon-btn" @onclick="NavigateToSwagger"><i class="fas fa-filter fa-2xl"></i></button>
+    </div>
+    <div class="text-buttons">
+        <span class="text-btn" onclick="setActiveButton(this); openCity(event, 'RECOMMENDED');">RECOMMENDED</span>
+        <span class="text-btn" onclick="setActiveButton(this); openCity(event, 'TOP_RATED');">TOP RATED</span>
+        <span class="text-btn" onclick="setActiveButton(this); openCity(event, 'RELEASE_DATE');">RELEASE DATE</span>
+        <span class="text-btn" onclick="setActiveButton(this); openCity(event, 'A-Z');">A-Z</span>
+    </div>
 </div>
 
-<div class="tab">
-    <button class="tablinks" onclick="openCity(event, 'RECOMMENDED')">RECOMMENDED</button>
-    <button class="tablinks" onclick="openCity(event, 'TOP_RATED')">TOP RATED</button>
-    <button class="tablinks" onclick="openCity(event, 'RELEASE_DATE')">RELEASE DATE</button>
-    <button class="tablinks" onclick="openCity(event, 'A-Z')">A-Z</button>
-</div>
-@if (getBranchesError || movies is null)
-{
-    <p>Unable to get branches from GitHub. Please try again later.</p>
-}
-else
-{
+<div class="black-box">
+    <!-- Tab content -->
+    <div id="RECOMMENDED" class="tabcontent">
 
-<!-- Tab content -->
-<div id="RECOMMENDED" class="tabcontent">
-
-    <table>
-<tbody>
+        <table>
+    <tbody>
    
-     <tr>
-          @{ var a = 0; }
-            @foreach (MovieJson s in RecommendedMovies)
-        {
-            <td style="text-align: center;">
-            <a href="/Create-Movie">
-            <img style="max-width: 300PX;" src="img_mountains.jpg" >
-            <p><span style="font-size: 200%; color: #749d36;">    @s.Title</span></p>
-                        </a>
-            </td>
+         <tr>
+              @{ var a = 0; }
+                @foreach (MovieJson s in RecommendedMovies)
+            {
+                <td style="text-align: center;">
+                <a href="/movie-details/@s.MovieId">
+                <img style="max-width: 300PX;" src="@s.Poster" >
+                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                            </a>
+                </td>
 
-                if(++a % 5 == 0)
-                {
-                    @:</tr><tr>
-                }
-             }
-        </tr>
-        </tbody>
-        </table>
+                    if(++a % 5 == 0)
+                    {
+                        @:</tr><tr>
+                    }
+                 }
+            </tr>
+            </tbody>
+            </table>
 
-</div>
+    </div>
 
-<div id="TOP_RATED" class="tabcontent">
+    <div id="TOP_RATED" class="tabcontent">
 
-    <table>
-<tbody>
+        <table>
+    <tbody>
    
-     <tr>
-          @{ var b = 0; }
-            @foreach (MovieJson s in RatingList)
-        {
-            <td style="text-align: center;">
-            <a href="/Create-Movie">
-            <img style="max-width: 300px;" src="img_mountains.jpg" >
-            <p><span style="font-size: 200%; color: #749d36;">    @s.Title</span></p>
-                        </a>
-            </td>
+         <tr>
+              @{ var b = 0; }
+                @foreach (MovieJson s in RatingList)
+            {
+                <td style="text-align: center;">
+                <a href="/movie-details/@s.MovieId">
+                <img style="max-width: 300px;" src="@s.Poster" >
+                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                            </a>
+                </td>
 
-                if(++b % 5 == 0)
-                {
-                    @:</tr><tr>
-                }
-             }
-        </tr>
-        </tbody>
-        </table>
+                    if(++b % 5 == 0)
+                    {
+                        @:</tr><tr>
+                    }
+                 }
+            </tr>
+            </tbody>
+            </table>
 
-</div>
+    </div>
 
-<div id="RELEASE_DATE" class="tabcontent">
+    <div id="RELEASE_DATE" class="tabcontent">
 
-    <table>
-<tbody>
+        <table>
+    <tbody>
    
-     <tr>
-          @{ var c = 0; }
-            @foreach (MovieJson s in ReleaseDateList)
-        {
-            <td style="text-align: center;">
-            <a href="/Create-Movie">
-            <img style="max-width: 300px;" src="img_mountains.jpg" >
-            <p><span style="font-size: 200%; color: #749d36;">    @s.Title</span></p>
-                        </a>
-            </td>
+         <tr>
+              @{ var c = 0; }
+                @foreach (MovieJson s in ReleaseDateList)
+            {
+                <td style="text-align: center;">
+                <a href="/movie-details/@s.MovieId">
+                <img style="max-width: 300px;" src="@s.Poster" >
+                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                            </a>
+                </td>
 
-                if(++c % 5 == 0)
-                {
-                    @:</tr><tr>
-                }
-             }
-        </tr>
-        </tbody>
-        </table>
+                    if(++c % 5 == 0)
+                    {
+                        @:</tr><tr>
+                    }
+                 }
+            </tr>
+            </tbody>
+            </table>
 
-</div>
-<div id="A-Z" class="tabcontent">
+    </div>
+    <div id="A-Z" class="tabcontent">
 
-    <table>
-<tbody>
+        <table>
+    <tbody>
    
-     <tr>
-          @{ var d = 0; }
-            @foreach (MovieJson s in OrderedList)
-        {
-            <td style="text-align: center;">
-            <a href="/Create-Movie">
-            <img style="max-width: 300px;" src="img_mountains.jpg" >
-            <p><span style="font-size: 200%; color: #749d36;">    @s.Title</span></p>
-                        </a>
-            </td>
+         <tr>
+              @{ var d = 0; }
+                @foreach (MovieJson s in OrderedList)
+            {
+                <td style="text-align: center;">
+                <a href="/movie-details/@s.MovieId">
+                <img style="max-width: 300px;" src="@s.Poster" >
+                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                            </a>
+                </td>
 
-                if(++d % 5 == 0)
-                {
-                    @:</tr><tr>
-                }
-             }
-        </tr>
-        </tbody>
-        </table>
+                    if(++d % 5 == 0)
+                    {
+                        @:</tr><tr>
+                    }
+                 }
+            </tr>
+            </tbody>
+            </table>
+    </div>
 </div>
-}
+
 @code{
     private IEnumerable<MovieJson>? movies = Array.Empty<MovieJson>();
     private IEnumerable<MovieJson>? OrderedList = Array.Empty<MovieJson>();
@@ -152,7 +146,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Get,
-            "https://localhost:7191/Movies");
+            "https://localhost:7189/Movies");
 
         var client = ClientFactory.CreateClient();
 
@@ -168,7 +162,7 @@ else
             ReleaseDateList = (movies.OrderBy(g => g.ReleaseDate));
 
             var r = new Random(DateTime.Now.Millisecond);
-            RecommendedMovies = movies.OrderBy(x => r.Next()).ToList(); ;
+            RecommendedMovies = movies.OrderBy(x => r.Next()).ToList();
             RatingList = (movies.OrderBy(g => g.Rating));
         }
         else
@@ -198,5 +192,20 @@ else
         [JsonPropertyName("title")]
         public string? Title { get; set; }
 
+    }
+}
+
+@code {
+    private void NavigateToCreateMovie()
+    {
+        Navigation.NavigateTo("create-movie");
+    }
+    private void NavigateToMovieDetails()
+    {
+        Navigation.NavigateTo("movie-details");
+    }
+    private void NavigateToSwagger()
+    {
+        Navigation.NavigateTo("https://127.0.0.1:7189/swagger");
     }
 }

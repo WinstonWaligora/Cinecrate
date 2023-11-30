@@ -23,40 +23,48 @@ namespace Server.Controllers
 		[Produces("application/json")]
 		public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
 		{
-			var movies = await _movieService.GetMoviesWithTags();
-			if (movies == null)
+            var movieDtos = await _movieService.GetMoviesWithTags();
+			if (movieDtos == null)
 			{
 				return NotFound();
 			}
-			return Ok(movies);
+			return Ok(movieDtos);
 		}
 
 		[HttpGet("{id}", Name = "GetMovie")]
 		[Produces("application/json")]
 		public async Task<ActionResult<MovieWithTagsDto>> GetMovie(Guid id)
 		{
-			var movie = await _movieService.GetMovieWithTags(id);
-			if (movie == null)
+			var movieDto = await _movieService.GetMovieWithTags(id);
+			if (movieDto == null)
 			{
 				return NotFound();
 			}
-			return Ok(movie);
+			return Ok(movieDto);
 		}
 
 		[HttpPost]
-		public ActionResult<Movie> CreateMovie(string title)
+        [Produces("application/json")]
+        public async Task<ActionResult<MovieWithTagsDto>> CreateMovie(MovieWithTagsDto movieWithTagsDtoInput)
 		{
-			throw new NotImplementedException();
+            var movieDto = await _movieService.CreateMovie(movieWithTagsDtoInput);
+            if (movieDto == null)
+            {
+                return NotFound();
+            }
+            return Ok(movieDto);
 		}
 
 		[HttpPut("{id}")]
-		public ActionResult<Movie> UpdateMovie(string title, int id)
+        [Produces("application/json")]
+        public ActionResult<MovieWithTagsDto> UpdateMovie(string title, int id)
 		{
 			throw new NotImplementedException();
 		}
 
 		[HttpPatch("{id}")]
-		public ActionResult<Movie> PartiallyUpdateMovie(string title, int id)
+        [Produces("application/json")]
+        public ActionResult<MovieWithTagsDto> PartiallyUpdateMovie(string title, int id)
 		{
 			throw new NotImplementedException();
 		}
