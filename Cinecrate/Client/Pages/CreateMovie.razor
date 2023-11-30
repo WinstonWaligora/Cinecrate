@@ -19,8 +19,18 @@
 <EditForm Model="@newMovieWithTagsDto">
     <div class="row">
         <div class="column">
-            <div class="add-poster column-item" style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw;">
-                <i class="fas fa-plus fa-2xl"></i>
+            <div class="add-poster column-item" style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw; margin-bottom: 0;">
+                @if (selectedImage == null)
+                {
+                    @* <i class="fas fa-plus fa-2xl"></i> *@
+                }
+                else
+                {
+                    <img src="@selectedImage" alt="The selected image." style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw;" />
+                }
+            </div>
+            <div class="column-item" style="margin-top: 0;">
+                <InputFile OnChange="@HandleFileSelection" />
             </div>
             <div class="column-item">
                 <label for="description">Description</label>
@@ -84,6 +94,8 @@
     private readonly HttpClient httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:7189") };
     private MovieWithTagsDto newMovieWithTagsDto = new MovieWithTagsDto { Tags = new List<TagDto>() };
     private string? TagInputValue { get; set; }
+    private string? selectedImage;
+    private ElementReference fileInput;
 
     private void AddTagButton()
     {
@@ -105,23 +117,40 @@
 
     private async Task HandleValidSubmit()
     {
-        newMovieWithTagsDto.Poster = Convert.ToBase64String(new Byte[0]);
         var response = await httpClient.PostAsJsonAsync("/Movies", newMovieWithTagsDto);
         try
         {
             response.EnsureSuccessStatusCode();
             await JSRuntime.InvokeVoidAsync("alert", "The movie was created successfully.");
-            Navigation.NavigateTo("/");
-        } catch
+            NavigateToHome();
+        }
+        catch (Exception ex)
         {
-            await JSRuntime.InvokeVoidAsync("alert", "The movie failed to be created.");
+            await JSRuntime.InvokeVoidAsync("alert", $"The movie failed to be created: {ex.Message}");
         }
 
     }
 
     private void NavigateToHome()
     {
-
         Navigation.NavigateTo("/");
+    }
+
+    private async Task HandleFileSelection(InputFileChangeEventArgs fileChangeEvent)
+    {
+        try
+        {
+            var file = fileChangeEvent.File;
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream().ReadAsync(buffer);
+            var base64 = Convert.ToBase64String(buffer);
+            newMovieWithTagsDto.Poster = base64;
+            selectedImage = $"data:{file.ContentType};base64,{base64}";
+            var binary = Convert.FromBase64String(base64);
+        }
+        catch
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "The supplied file exceeds the maximum file size.");
+        }
     }
 }

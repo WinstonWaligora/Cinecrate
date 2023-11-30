@@ -18,6 +18,7 @@ namespace Cinecrate.Server.Profiles
                             TagId = movieTag.Tag.TagId
                         }).ToList())).ReverseMap();
             CreateMap<string, byte[]>().ConvertUsing(str => Convert.FromBase64String(str));
+            CreateMap<byte[], string>().ConvertUsing(byteArray => Convert.ToBase64String(byteArray));
         }
     }
 }

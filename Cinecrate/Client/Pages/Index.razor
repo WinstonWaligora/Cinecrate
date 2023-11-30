@@ -36,8 +36,8 @@
             {
                 <td style="text-align: center;">
                 <a href="/movies-details/@s.MovieId">
-                <img style="max-width: 300PX;" src="@s.Poster" >
-                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                <img style="height: 20vh; width: 16vw; max-width: 20vw; margin-left: 1vw" src="@s.Poster" >
+                <p><span style="font-size: 180%; color: slategrey;">    @s.Title</span></p>
                             </a>
                 </td>
 
@@ -63,8 +63,8 @@
             {
                 <td style="text-align: center;">
                 <a href="/movies-details/@s.MovieId">
-                <img style="max-width: 300px;" src="@s.Poster" >
-                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                <img style="height: 20vh; width: 16vw; max-width: 20vw; margin-left: 1vw" src="@s.Poster" >
+                <p><span style="font-size: 180%; color: slategrey;">    @s.Title</span></p>
                             </a>
                 </td>
 
@@ -90,8 +90,8 @@
             {
                 <td style="text-align: center;">
                 <a href="/movies-details/@s.MovieId">
-                <img style="max-width: 300px;" src="@s.Poster" >
-                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                <img style="height: 20vh; width: 16vw; max-width: 20vw; margin-left: 1vw" src="@s.Poster" >
+                <p><span style="font-size: 180%; color: slategrey;">    @s.Title</span></p>
                             </a>
                 </td>
 
@@ -116,8 +116,8 @@
             {
                 <td style="text-align: center;">
                 <a href="/movies-details/@s.MovieId">
-                <img style="max-width: 300px;" src="@s.Poster" >
-                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                <img style="height: 20vh; width: 16vw; max-width: 20vw; margin-left: 1vw" src="@s.Poster" >
+                <p><span style="font-size: 180%; color: slategrey;">    @s.Title</span></p>
                             </a>
                 </td>
 
@@ -156,8 +156,11 @@
         {
             using var responseStream = await response.Content.ReadAsStreamAsync();
 
-            movies = await JsonSerializer.DeserializeAsync
-                <IEnumerable<MovieJson>>(responseStream);
+            movies = await JsonSerializer.DeserializeAsync<IEnumerable<MovieJson>>(responseStream);
+            foreach (var movie in movies)
+            {
+                movie.Poster = $"data:image/png;base64,{movie.Poster}";
+            }
             OrderedList = (movies.OrderBy(g => g.Title));
             ReleaseDateList = (movies.OrderBy(g => g.ReleaseDate));
 
