@@ -1,4 +1,10 @@
 @page "/"
+@using System.Net;
+@using Cinecrate.Shared.Entities;
+@using System.Text.Json;
+@using System.Text.Json.Serialization
+@using System.Runtime.Serialization;
+@inject IHttpClientFactory ClientFactory
 @inject NavigationManager Navigation
 
 <div class="blue-bar">
@@ -10,16 +16,184 @@
         <button class="icon-btn" @onclick="NavigateToSwagger"><i class="fas fa-filter fa-2xl"></i></button>
     </div>
     <div class="text-buttons">
-        <span class="text-btn" onclick="setActiveButton(this)">RECOMMENDED</span>
-        <span class="text-btn" onclick="setActiveButton(this)">TOP RATED</span>
-        <span class="text-btn" onclick="setActiveButton(this)">RELEASE DATE</span>
-        <span class="text-btn" onclick="setActiveButton(this)">A-Z</span>
+        <span class="text-btn" onclick="setActiveButton(this); openCity(event, 'RECOMMENDED');">RECOMMENDED</span>
+        <span class="text-btn" onclick="setActiveButton(this); openCity(event, 'TOP_RATED');">TOP RATED</span>
+        <span class="text-btn" onclick="setActiveButton(this); openCity(event, 'RELEASE_DATE');">RELEASE DATE</span>
+        <span class="text-btn" onclick="setActiveButton(this); openCity(event, 'A-Z');">A-Z</span>
     </div>
 </div>
+
 <div class="black-box">
-    <!-- ... any content inside the black box ... -->
+    <!-- Tab content -->
+    <div id="RECOMMENDED" class="tabcontent">
+
+        <table>
+    <tbody>
+   
+         <tr>
+              @{ var a = 0; }
+                @foreach (MovieJson s in RecommendedMovies)
+            {
+                <td style="text-align: center;">
+                <a href="/movie-details/@s.MovieId">
+                <img style="max-width: 300PX;" src="@s.Poster" >
+                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                            </a>
+                </td>
+
+                    if(++a % 5 == 0)
+                    {
+                        @:</tr><tr>
+                    }
+                 }
+            </tr>
+            </tbody>
+            </table>
+
+    </div>
+
+    <div id="TOP_RATED" class="tabcontent">
+
+        <table>
+    <tbody>
+   
+         <tr>
+              @{ var b = 0; }
+                @foreach (MovieJson s in RatingList)
+            {
+                <td style="text-align: center;">
+                <a href="/movie-details/@s.MovieId">
+                <img style="max-width: 300px;" src="@s.Poster" >
+                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                            </a>
+                </td>
+
+                    if(++b % 5 == 0)
+                    {
+                        @:</tr><tr>
+                    }
+                 }
+            </tr>
+            </tbody>
+            </table>
+
+    </div>
+
+    <div id="RELEASE_DATE" class="tabcontent">
+
+        <table>
+    <tbody>
+   
+         <tr>
+              @{ var c = 0; }
+                @foreach (MovieJson s in ReleaseDateList)
+            {
+                <td style="text-align: center;">
+                <a href="/movie-details/@s.MovieId">
+                <img style="max-width: 300px;" src="@s.Poster" >
+                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                            </a>
+                </td>
+
+                    if(++c % 5 == 0)
+                    {
+                        @:</tr><tr>
+                    }
+                 }
+            </tr>
+            </tbody>
+            </table>
+
+    </div>
+    <div id="A-Z" class="tabcontent">
+
+        <table>
+    <tbody>
+   
+         <tr>
+              @{ var d = 0; }
+                @foreach (MovieJson s in OrderedList)
+            {
+                <td style="text-align: center;">
+                <a href="/movie-details/@s.MovieId">
+                <img style="max-width: 300px;" src="@s.Poster" >
+                <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
+                            </a>
+                </td>
+
+                    if(++d % 5 == 0)
+                    {
+                        @:</tr><tr>
+                    }
+                 }
+            </tr>
+            </tbody>
+            </table>
+    </div>
 </div>
 
+@code{
+    private IEnumerable<MovieJson>? movies = Array.Empty<MovieJson>();
+    private IEnumerable<MovieJson>? OrderedList = Array.Empty<MovieJson>();
+    private IEnumerable<MovieJson>? ReleaseDateList = Array.Empty<MovieJson>();
+    private IEnumerable<MovieJson>? RecommendedMovies = Array.Empty<MovieJson>();
+    private IEnumerable<MovieJson>? RatingList = Array.Empty<MovieJson>();
+    private bool getBranchesError;
+    private bool shouldRender;
+
+    protected override bool ShouldRender() => shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            "https://localhost:7189/Movies");
+
+        var client = ClientFactory.CreateClient();
+
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+
+            movies = await JsonSerializer.DeserializeAsync
+                <IEnumerable<MovieJson>>(responseStream);
+            OrderedList = (movies.OrderBy(g => g.Title));
+            ReleaseDateList = (movies.OrderBy(g => g.ReleaseDate));
+
+            var r = new Random(DateTime.Now.Millisecond);
+            RecommendedMovies = movies.OrderBy(x => r.Next()).ToList();
+            RatingList = (movies.OrderBy(g => g.Rating));
+        }
+        else
+        {
+            getBranchesError = true;
+        }
+
+        shouldRender = true;
+    }
+
+    public class MovieJson
+    {
+        [JsonPropertyName("description")]
+        public string? Description { get; set; }
+        [JsonPropertyName("director")]
+        public string? Director { get; set; }
+        [JsonPropertyName("duration")]
+        public int? Duration { get; set; }
+        [JsonPropertyName("movieId")]
+        public Guid? MovieId { get; set; }
+        [JsonPropertyName("poster")]
+        public string? Poster { get; set; }
+        [JsonPropertyName("rating")]
+        public char? Rating { get; set; }
+        [JsonPropertyName("releaseDate")]
+        public DateTime? ReleaseDate { get; set; }
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+
+    }
+}
 
 @code {
     private void NavigateToCreateMovie()
