@@ -2,6 +2,7 @@
 @using Cinecrate.Shared.Models
 @using Microsoft.AspNetCore.Components.Forms
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <div class="blue-bar">
     <h1 class="app-title">Cinecrate</h1>
@@ -32,6 +33,12 @@
                 <label for="title">Title</label>
                 <input type="text" id="title" placeholder="Enter movie title" @bind="@newMovieWithTagsDto.Title" />
                 <ValidationMessage For="@(() => newMovieWithTagsDto.Title)" />
+            </div>
+
+            <div class="column-item">
+                <label for="rating">Rating</label>
+                <input type="char" id="rating" placeholder="Enter rating" @bind="@newMovieWithTagsDto.Rating" />
+                <ValidationMessage For="@(() => newMovieWithTagsDto.Rating)" />
             </div>
 
             <div class="column-item">
@@ -100,7 +107,16 @@
     {
         newMovieWithTagsDto.Poster = Convert.ToBase64String(new Byte[0]);
         var response = await httpClient.PostAsJsonAsync("/Movies", newMovieWithTagsDto);
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            response.EnsureSuccessStatusCode();
+            await JSRuntime.InvokeVoidAsync("alert", "The movie was created successfully.");
+            Navigation.NavigateTo("/");
+        } catch
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "The movie failed to be created.");
+        }
+
     }
 
     private void NavigateToHome()
