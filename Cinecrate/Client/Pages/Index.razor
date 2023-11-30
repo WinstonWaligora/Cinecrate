@@ -35,7 +35,7 @@
                 @foreach (MovieJson s in RecommendedMovies)
             {
                 <td style="text-align: center;">
-                <a href="/movie-details/@s.MovieId">
+                <a href="/movies-details/@s.MovieId">
                 <img style="max-width: 300PX;" src="@s.Poster" >
                 <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
                             </a>
@@ -62,7 +62,7 @@
                 @foreach (MovieJson s in RatingList)
             {
                 <td style="text-align: center;">
-                <a href="/movie-details/@s.MovieId">
+                <a href="/movies-details/@s.MovieId">
                 <img style="max-width: 300px;" src="@s.Poster" >
                 <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
                             </a>
@@ -89,7 +89,7 @@
                 @foreach (MovieJson s in ReleaseDateList)
             {
                 <td style="text-align: center;">
-                <a href="/movie-details/@s.MovieId">
+                <a href="/movies-details/@s.MovieId">
                 <img style="max-width: 300px;" src="@s.Poster" >
                 <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
                             </a>
@@ -115,7 +115,7 @@
                 @foreach (MovieJson s in OrderedList)
             {
                 <td style="text-align: center;">
-                <a href="/movie-details/@s.MovieId">
+                <a href="/movies-details/@s.MovieId">
                 <img style="max-width: 300px;" src="@s.Poster" >
                 <p><span style="font-size: 200%; color: white;">    @s.Title</span></p>
                             </a>
@@ -202,7 +202,7 @@
     }
     private void NavigateToMovieDetails()
     {
-        Navigation.NavigateTo("movie-details");
+        Navigation.NavigateTo("movies-details");
     }
     private void NavigateToSwagger()
     {

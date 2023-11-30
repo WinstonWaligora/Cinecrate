@@ -1,0 +1,155 @@
+﻿@page "/movies-details/{movieID}"
+@using Cinecrate.Shared.Models
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+@inject IJSRuntime JSRuntime
+
+<div class="blue-bar">
+	<h1 class="app-title">Cinecrate</h1>
+	<div class="icon-container">
+
+		<button class="icon-btn" style="border:none;" @onclick="GoBack">
+			<i class="fas fa-arrow-left fa-2xl"></i>
+		</button>
+
+		<button class="icon-btn" style="border: none;" @onclick="DeleteMovie">
+			<i class="fas fa-trash fa-2xl"></i>
+		</button>
+
+	</div>
+</div>
+
+
+
+@if (movieDetails is null)
+{
+	<p><em>Loading....</em></p>
+}
+else
+{
+	<div class="row">
+		<div class="column">
+			<div class="add-poster column-item" style="max-height: 50vw; max-width: 36vh; height: 50vh; width: 36vw;">
+				<img src="@movieDetails.Poster" alt="MoviePoster.jpg" />
+
+			</div>
+
+		</div>
+
+		<div class="column">
+			<div class="movie-details">
+				<div class="column-item">
+					<h1>@movieDetails.Title</h1>
+				</div>
+
+				<div class="column-item">
+					<h3>@movieDetails.ReleaseDate?.Year</h3>
+				</div>
+
+				<div class="column-item">
+					<h3>@movieDetails.Duration</h3>
+				</div>
+
+				<div class="column-item">
+					<h3> Director: @string.Join(",  ", movieDetails.Director) </h3>
+				</div>
+
+				<div class="column-item">
+					<h3>Tag:  @string.Join(", ", Tag)</h3>
+				</div>
+
+
+			</div>
+
+		</div>
+
+		<div class="column">
+			<div class="column-item">
+				<span class="stars">Ratings </span>
+				<span>@movieDetails.Rating /5</span>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="column">
+			<div class="column-item">
+				<label for="description">Description</label>
+				<textarea id="description" rows="3" style="max-width: 100%;" @bind="movieDetails.Description"></textarea>
+			</div>
+
+		</div>
+
+	</div>
+}
+
+
+
+
+@code {
+	// [Inject]
+	// private IToastService ToastService { get; set; }
+	[Parameter]
+	public string? movieID { get; set; }
+
+	private MovieWithTagsDto? movieDetails { get; set; }
+
+
+	[Parameter]
+	public string? tagId { get; set; }
+
+	private List<string?> Tag { get; set; } = new List<string?>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (!string.IsNullOrEmpty(movieID))
+		{
+
+			// Fetch movie details using the injected HttpClient
+			movieDetails = await httpClient.GetFromJsonAsync<MovieWithTagsDto>($"/movies/{movieID}");
+
+			if (movieDetails != null && movieDetails.Tags != null)
+			{
+				// Extract tag names from the Tags property of MovieWithTagsDto
+				Tag = movieDetails.Tags.Select(tag => tag.Name).ToList();
+			}
+
+		}
+
+	}
+
+	private async Task DeleteMovie()
+	{
+		if (!string.IsNullOrEmpty(movieID))
+		{
+			// Invoke the delete endpoint using the injected HttpClient
+			var response = await httpClient.DeleteAsync($"/movies/{movieID}");
+
+			if (response.IsSuccessStatusCode)
+			{
+				// Handle successful deletion, such as navigating back to a movie list page
+				await JSRuntime.InvokeVoidAsync("alert", "Movie deleted successfully!");
+				// await ToastService.ShowSuccess("Movie deleted successfully!","");
+				// ToastService.ShowSuccess("Movie deleted successfully!");
+				navigationManager.NavigateTo("/");
+			}
+			else
+			{
+				string ErrorMessage;
+				// Handle failure,
+				var errorMessage = await response.Content.ReadAsStringAsync();
+				await JSRuntime.InvokeVoidAsync("alert", "Failed to delete");
+				ErrorMessage = $"Failed to delete the movie. Error: {errorMessage}";
+			}
+		}
+	}
+
+	private void GoBack()
+	{
+		// Navigate back to the movies page
+		navigationManager.NavigateTo("/");
+	}
+}

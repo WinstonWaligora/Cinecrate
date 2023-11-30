@@ -7,7 +7,7 @@ namespace Cinecrate.Server.Services
 	{
 		Task<MovieWithTagsDto> CreateMovie(MovieWithTagsDto movieWithTagsDto);
 		void DeleteMovies();
-		void DeleteMovie(Guid movieId);
+		Task DeleteMovie(Guid movieId);
 		Task<IEnumerable<MovieDto?>> GetMovies();
 		Task<IEnumerable<MovieWithTagsDto?>> GetMoviesWithTags();
 		Task<MovieDto?> GetMovie(Guid movieId);

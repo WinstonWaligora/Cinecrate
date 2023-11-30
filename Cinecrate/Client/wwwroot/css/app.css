@@ -209,6 +209,11 @@ textarea {
     margin: 2em;
 }
 
+.movie-details {
+    flex: 1;
+    margin: 2em;
+}
+
 .fas:hover {
     cursor: pointer;
 }

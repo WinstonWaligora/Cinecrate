@@ -43,9 +43,21 @@ namespace Cinecrate.Server.Services
 			throw new NotImplementedException();
 		}
 
-		public void DeleteMovie(Guid movieId)
+		public async Task DeleteMovie(Guid movieId)
 		{
-			throw new NotImplementedException();
+			var movie = _context.Movies.FirstOrDefault(m => m.MovieId == movieId);
+			if (movie != null)
+			{
+				var movieTags = _context.MovieTags.Where(mt => mt.MovieId == movieId);
+				_context.MovieTags.RemoveRange(movieTags);
+				_context.Movies.Remove(movie);
+				await _context.SaveChangesAsync();
+			}
+			else
+			{
+				// Handle the case where the movie with the specified ID is not found
+				throw new FileNotFoundException($"Movie with ID {movieId} not found.");
+			}
 		}
 
 		public async Task<IEnumerable<MovieDto?>> GetMovies()

@@ -68,5 +68,21 @@ namespace Server.Controllers
 		{
 			throw new NotImplementedException();
 		}
+
+		[HttpDelete("{id}")]
+		[Produces("application/json")]
+		public async Task<ActionResult> DeleteMovie(Guid id)
+		{
+			try
+			{
+				await _movieService.DeleteMovie(id);
+				return NoContent();
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+
+		}
 	}
 }
